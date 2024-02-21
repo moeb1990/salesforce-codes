@@ -1,0 +1,46 @@
+@isTest
+private class StringToCollection_Test {
+    
+    @isTest
+    static void StringToCollection_Test() {
+        
+        // Test1 valid text and separator
+        List <StringToCollection.StringToCollectionRequest> requests1 = new List<StringToCollection.StringToCollectionRequest>();
+        
+        StringToCollection.StringToCollectionRequest request1 = new StringToCollection.StringToCollectionRequest();
+        request1.text = 'yes,no,maybe';
+        request1.separator = ',';
+
+        requests1.add(request1);
+        
+        // Execute Test1
+        List<StringToCollection.StringToCollectionResult> results1 = StringToCollection.convertStringToCollection(requests1);
+        // StringToCollection.StringToCollectionResult result = new StringToCollection.StringToCollectionResult();
+        // list<String> textCollection = new list<String>();
+        // result.textCollection = textCollection;
+        // results1.add(result);
+
+        // Verify that string is split into collection
+        System.assertEquals(3, results1[0].textCollection.size());
+        System.assertEquals('yes', results1[0].textCollection[0]);
+        System.assertEquals('no', results1[0].textCollection[1]);
+        System.assertEquals('maybe', results1[0].textCollection[2]);
+
+        // Test2 valid text and separator
+        List <StringToCollection.StringToCollectionRequest> requests2 = new List<StringToCollection.StringToCollectionRequest>();
+
+        StringToCollection.StringToCollectionRequest request2 = new StringToCollection.StringToCollectionRequest();
+        request2.text = 'yes,no,maybe';
+        request2.separator = '-';
+        
+        requests2.add(request2);
+
+        
+        // Execute Test2
+        List<StringToCollection.StringToCollectionResult> results2 = StringToCollection.convertStringToCollection(requests2);
+
+        // Verify that string is split into collection
+        System.assertEquals(1, results2[0].textCollection.size());
+        System.assertEquals('yes,no,maybe', results2[0].textCollection[0]);
+    }
+}
