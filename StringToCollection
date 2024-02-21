@@ -1,0 +1,49 @@
+global class StringToCollection {
+    
+    @InvocableMethod (label = 'Convert Text into Collection by the text separator')
+    global static List<StringToCollectionResult> convertStringToCollection(List<StringToCollectionRequest> requests) {
+        
+        String text;
+        String separator;
+        List<StringToCollectionResult> results = new List<StringToCollectionResult> ();
+        StringToCollectionResult result = new StringToCollectionResult();
+        List<String> textCollection = new List<String> ();
+
+        // Null Check
+        if (requests.size() > 0) {
+
+                for (StringToCollectionRequest request : requests) {
+
+                    text = request.text;
+                    separator = request.separator;
+                
+                    // Null Check
+                    if (String.isNotBlank(text) &&  String.isNotBlank(separator)) {
+                                        
+                        // Split text by separator if present, else add text as a single entry in the collection
+                        if (text.contains(separator)) {          
+                            textCollection.addAll(text.split(separator));
+
+                        } else {
+                            textCollection.add(text);
+                        }
+                    }
+                }
+        } 
+        result.textCollection = textCollection;
+        results.add(result);
+        return results;
+    }
+
+    global class StringToCollectionRequest {
+        @InvocableVariable (required=true)
+        global String text; 
+        @InvocableVariable (required=true)
+        global String separator; 
+    }
+    
+    global class StringToCollectionResult {
+        @InvocableVariable (required=true)
+        global List<String> textCollection; 
+    }
+}
