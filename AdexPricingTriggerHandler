@@ -1,0 +1,37 @@
+public class AdexPricingTriggerHandler {
+      
+    // Method to update the Flexible Andoird price inside the iOS record
+    public void updateAndroidPrice( List<Adex_Pricing__c> records ) {
+        
+        // Retrieve iOS records into a map with Product_Without_Platform__c and Geo_Target__c as composite key
+        Map<String,Adex_Pricing__c> iosRecords = new Map<String,Adex_Pricing__c>();
+        for (Adex_Pricing__c iosRecord :    [SELECT Id, Platform__c, Product_Without_Platform__c, Geo_Target__c 
+                                            FROM Adex_Pricing__c 
+                                            WHERE Platform__c = 'App_iOS' ]) {
+            
+            
+            iosRecords.put(iosRecord.Product_Without_Platform__c + '_' + iosRecord.Geo_Target__c , iosRecord); 
+        }
+        
+        // checks that there are Android records in the loop
+        Boolean androidCheck = false;
+        
+        // Update the ios matching record with the Android flexible price
+        for (Adex_Pricing__c record : records) {
+            if (record.Platform__c == 'App_Android' ) {
+                                      
+                androidCheck = true;
+                Adex_Pricing__c matchingIOSRecord = iosRecords.get(record.Product_Without_Platform__c + '_' + record.Geo_Target__c);
+        
+                if (matchingIOSRecord != null) {
+                    matchingIOSRecord.Flexible_Price_Android__c = record.Flexible_Price__c;
+                }
+            }
+        }
+                
+        // Update the values
+        if (! iosRecords.isEmpty() && androidCheck) {
+            update iosRecords.values();
+        }
+    }
+}
